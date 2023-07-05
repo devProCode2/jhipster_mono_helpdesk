@@ -1,0 +1,54 @@
+{
+  "changelogDate": "20230705221541",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "titulo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "50",
+      "fieldValidateRulesMinlength": "4"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ABERTO,ANDAMENTO,ENCERRADO"
+    },
+    {
+      "fieldName": "prioridade",
+      "fieldType": "Prioridade",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BAIXA,MEDIA,ALTA"
+    },
+    {
+      "fieldName": "dataAbertura",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dataFechamento",
+      "fieldType": "Instant",
+      "fieldValidateRules": []
+    },
+    {
+      "fieldName": "valorOrcamento",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": 0
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "100",
+      "fieldValidateRulesMinlength": "4"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Chamado",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="chamado">
+      <h2 data-cy="chamadoDetailsHeading"><span>Chamado</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ chamado.id }}</span>
+        </dd>
+        <dt><span>Titulo</span></dt>
+        <dd>
+          <span>{{ chamado.titulo }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ chamado.status }}</span>
+        </dd>
+        <dt><span>Prioridade</span></dt>
+        <dd>
+          <span>{{ chamado.prioridade }}</span>
+        </dd>
+        <dt><span>Data Abertura</span></dt>
+        <dd>
+          <span>{{ chamado.dataAbertura | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Data Fechamento</span></dt>
+        <dd>
+          <span>{{ chamado.dataFechamento | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Valor Orcamento</span></dt>
+        <dd>
+          <span>{{ chamado.valorOrcamento }}</span>
+        </dd>
+        <dt><span>Descricao</span></dt>
+        <dd>
+          <span>{{ chamado.descricao }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/chamado', chamado.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

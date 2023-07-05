@@ -1,0 +1,144 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-chamado-heading" data-cy="ChamadoCreateUpdateHeading">Criar ou editar Chamado</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_titulo">Titulo</label>
+          <input type="text" class="form-control" name="titulo" id="field_titulo" data-cy="titulo" formControlName="titulo" />
+          <div *ngIf="editForm.get('titulo')!.invalid && (editForm.get('titulo')!.dirty || editForm.get('titulo')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('titulo')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('titulo')?.errors?.minlength">
+              Este campo deve ter pelo menos 4 caracteres.
+            </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('titulo')?.errors?.maxlength">
+              Este campo não pode ter mais de 50 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let status of statusValues" [value]="status">status</option>
+          </select>
+          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_prioridade">Prioridade</label>
+          <select class="form-control" name="prioridade" formControlName="prioridade" id="field_prioridade" data-cy="prioridade">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let prioridade of prioridadeValues" [value]="prioridade">prioridade</option>
+          </select>
+          <div *ngIf="editForm.get('prioridade')!.invalid && (editForm.get('prioridade')!.dirty || editForm.get('prioridade')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('prioridade')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataAbertura">Data Abertura</label>
+          <div class="d-flex">
+            <input
+              id="field_dataAbertura"
+              data-cy="dataAbertura"
+              type="datetime-local"
+              class="form-control"
+              name="dataAbertura"
+              formControlName="dataAbertura"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div
+            *ngIf="editForm.get('dataAbertura')!.invalid && (editForm.get('dataAbertura')!.dirty || editForm.get('dataAbertura')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('dataAbertura')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('dataAbertura')?.errors?.datetimelocal">
+              Este campo é do tipo data/hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataFechamento">Data Fechamento</label>
+          <div class="d-flex">
+            <input
+              id="field_dataFechamento"
+              data-cy="dataFechamento"
+              type="datetime-local"
+              class="form-control"
+              name="dataFechamento"
+              formControlName="dataFechamento"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_valorOrcamento">Valor Orcamento</label>
+          <input
+            type="number"
+            class="form-control"
+            name="valorOrcamento"
+            id="field_valorOrcamento"
+            data-cy="valorOrcamento"
+            formControlName="valorOrcamento"
+          />
+          <div
+            *ngIf="
+              editForm.get('valorOrcamento')!.invalid && (editForm.get('valorOrcamento')!.dirty || editForm.get('valorOrcamento')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('valorOrcamento')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('valorOrcamento')?.errors?.min">
+              Este campo deve ser maior que 0.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('valorOrcamento')?.errors?.number">
+              Este campo é do tipo numérico.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_descricao">Descricao</label>
+          <input type="text" class="form-control" name="descricao" id="field_descricao" data-cy="descricao" formControlName="descricao" />
+          <div *ngIf="editForm.get('descricao')!.invalid && (editForm.get('descricao')!.dirty || editForm.get('descricao')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('descricao')?.errors?.minlength">
+              Este campo deve ter pelo menos 4 caracteres.
+            </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('descricao')?.errors?.maxlength">
+              Este campo não pode ter mais de 100 caracteres.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

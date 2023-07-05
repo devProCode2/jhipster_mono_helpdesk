@@ -39,6 +39,8 @@ type ChamadoFormGroupContent = {
   dataFechamento: FormControl<ChamadoFormRawValue['dataFechamento']>;
   valorOrcamento: FormControl<ChamadoFormRawValue['valorOrcamento']>;
   descricao: FormControl<ChamadoFormRawValue['descricao']>;
+  cliente: FormControl<ChamadoFormRawValue['cliente']>;
+  tecnico: FormControl<ChamadoFormRawValue['tecnico']>;
 };
 
 export type ChamadoFormGroup = FormGroup<ChamadoFormGroupContent>;
@@ -76,6 +78,12 @@ export class ChamadoFormService {
       }),
       descricao: new FormControl(chamadoRawValue.descricao, {
         validators: [Validators.minLength(4), Validators.maxLength(100)],
+      }),
+      cliente: new FormControl(chamadoRawValue.cliente, {
+        validators: [Validators.required],
+      }),
+      tecnico: new FormControl(chamadoRawValue.tecnico, {
+        validators: [Validators.required],
       }),
     });
   }

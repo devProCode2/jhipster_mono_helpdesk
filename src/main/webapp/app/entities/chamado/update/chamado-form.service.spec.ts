@@ -27,6 +27,8 @@ describe('Chamado Form Service', () => {
             dataFechamento: expect.any(Object),
             valorOrcamento: expect.any(Object),
             descricao: expect.any(Object),
+            cliente: expect.any(Object),
+            tecnico: expect.any(Object),
           })
         );
       });
@@ -44,6 +46,8 @@ describe('Chamado Form Service', () => {
             dataFechamento: expect.any(Object),
             valorOrcamento: expect.any(Object),
             descricao: expect.any(Object),
+            cliente: expect.any(Object),
+            tecnico: expect.any(Object),
           })
         );
       });

@@ -73,6 +73,10 @@ public class ChamadoCriteria implements Serializable, Criteria {
 
     private StringFilter descricao;
 
+    private LongFilter clienteId;
+
+    private LongFilter tecnicoId;
+
     private Boolean distinct;
 
     public ChamadoCriteria() {}
@@ -86,6 +90,8 @@ public class ChamadoCriteria implements Serializable, Criteria {
         this.dataFechamento = other.dataFechamento == null ? null : other.dataFechamento.copy();
         this.valorOrcamento = other.valorOrcamento == null ? null : other.valorOrcamento.copy();
         this.descricao = other.descricao == null ? null : other.descricao.copy();
+        this.clienteId = other.clienteId == null ? null : other.clienteId.copy();
+        this.tecnicoId = other.tecnicoId == null ? null : other.tecnicoId.copy();
         this.distinct = other.distinct;
     }
 
@@ -214,6 +220,36 @@ public class ChamadoCriteria implements Serializable, Criteria {
         this.descricao = descricao;
     }
 
+    public LongFilter getClienteId() {
+        return clienteId;
+    }
+
+    public LongFilter clienteId() {
+        if (clienteId == null) {
+            clienteId = new LongFilter();
+        }
+        return clienteId;
+    }
+
+    public void setClienteId(LongFilter clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public LongFilter getTecnicoId() {
+        return tecnicoId;
+    }
+
+    public LongFilter tecnicoId() {
+        if (tecnicoId == null) {
+            tecnicoId = new LongFilter();
+        }
+        return tecnicoId;
+    }
+
+    public void setTecnicoId(LongFilter tecnicoId) {
+        this.tecnicoId = tecnicoId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -240,13 +276,27 @@ public class ChamadoCriteria implements Serializable, Criteria {
             Objects.equals(dataFechamento, that.dataFechamento) &&
             Objects.equals(valorOrcamento, that.valorOrcamento) &&
             Objects.equals(descricao, that.descricao) &&
+            Objects.equals(clienteId, that.clienteId) &&
+            Objects.equals(tecnicoId, that.tecnicoId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titulo, status, prioridade, dataAbertura, dataFechamento, valorOrcamento, descricao, distinct);
+        return Objects.hash(
+            id,
+            titulo,
+            status,
+            prioridade,
+            dataAbertura,
+            dataFechamento,
+            valorOrcamento,
+            descricao,
+            clienteId,
+            tecnicoId,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -261,6 +311,8 @@ public class ChamadoCriteria implements Serializable, Criteria {
             (dataFechamento != null ? "dataFechamento=" + dataFechamento + ", " : "") +
             (valorOrcamento != null ? "valorOrcamento=" + valorOrcamento + ", " : "") +
             (descricao != null ? "descricao=" + descricao + ", " : "") +
+            (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
+            (tecnicoId != null ? "tecnicoId=" + tecnicoId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

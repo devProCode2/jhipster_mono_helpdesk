@@ -89,6 +89,15 @@ public class ChamadoService {
     }
 
     /**
+     * Get all the chamados with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<ChamadoDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return chamadoRepository.findAllWithEagerRelationships(pageable).map(chamadoMapper::toDto);
+    }
+
+    /**
      * Get one chamado by id.
      *
      * @param id the id of the entity.
@@ -97,7 +106,7 @@ public class ChamadoService {
     @Transactional(readOnly = true)
     public Optional<ChamadoDTO> findOne(Long id) {
         log.debug("Request to get Chamado : {}", id);
-        return chamadoRepository.findById(id).map(chamadoMapper::toDto);
+        return chamadoRepository.findOneWithEagerRelationships(id).map(chamadoMapper::toDto);
     }
 
     /**

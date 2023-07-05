@@ -111,6 +111,18 @@ public class ChamadoQueryService extends QueryService<Chamado> {
             if (criteria.getDescricao() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescricao(), Chamado_.descricao));
             }
+            if (criteria.getClienteId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getClienteId(), root -> root.join(Chamado_.cliente, JoinType.LEFT).get(Pessoa_.id))
+                    );
+            }
+            if (criteria.getTecnicoId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getTecnicoId(), root -> root.join(Chamado_.tecnico, JoinType.LEFT).get(Pessoa_.id))
+                    );
+            }
         }
         return specification;
     }

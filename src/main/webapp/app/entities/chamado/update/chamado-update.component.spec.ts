@@ -9,6 +9,8 @@ import { of, Subject, from } from 'rxjs';
 import { ChamadoFormService } from './chamado-form.service';
 import { ChamadoService } from '../service/chamado.service';
 import { IChamado } from '../chamado.model';
+import { IPessoa } from 'app/entities/pessoa/pessoa.model';
+import { PessoaService } from 'app/entities/pessoa/service/pessoa.service';
 
 import { ChamadoUpdateComponent } from './chamado-update.component';
 
@@ -18,6 +20,7 @@ describe('Chamado Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let chamadoFormService: ChamadoFormService;
   let chamadoService: ChamadoService;
+  let pessoaService: PessoaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -40,17 +43,48 @@ describe('Chamado Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     chamadoFormService = TestBed.inject(ChamadoFormService);
     chamadoService = TestBed.inject(ChamadoService);
+    pessoaService = TestBed.inject(PessoaService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should update editForm', () => {
+    it('Should call Pessoa query and add missing value', () => {
       const chamado: IChamado = { id: 456 };
+      const cliente: IPessoa = { id: 14617 };
+      chamado.cliente = cliente;
+      const tecnico: IPessoa = { id: 81229 };
+      chamado.tecnico = tecnico;
+
+      const pessoaCollection: IPessoa[] = [{ id: 66906 }];
+      jest.spyOn(pessoaService, 'query').mockReturnValue(of(new HttpResponse({ body: pessoaCollection })));
+      const additionalPessoas = [cliente, tecnico];
+      const expectedCollection: IPessoa[] = [...additionalPessoas, ...pessoaCollection];
+      jest.spyOn(pessoaService, 'addPessoaToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ chamado });
       comp.ngOnInit();
 
+      expect(pessoaService.query).toHaveBeenCalled();
+      expect(pessoaService.addPessoaToCollectionIfMissing).toHaveBeenCalledWith(
+        pessoaCollection,
+        ...additionalPessoas.map(expect.objectContaining)
+      );
+      expect(comp.pessoasSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should update editForm', () => {
+      const chamado: IChamado = { id: 456 };
+      const cliente: IPessoa = { id: 32440 };
+      chamado.cliente = cliente;
+      const tecnico: IPessoa = { id: 19826 };
+      chamado.tecnico = tecnico;
+
+      activatedRoute.data = of({ chamado });
+      comp.ngOnInit();
+
+      expect(comp.pessoasSharedCollection).toContain(cliente);
+      expect(comp.pessoasSharedCollection).toContain(tecnico);
       expect(comp.chamado).toEqual(chamado);
     });
   });
@@ -120,6 +154,18 @@ describe('Chamado Management Update Component', () => {
       expect(chamadoService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Compare relationships', () => {
+    describe('comparePessoa', () => {
+      it('Should forward to pessoaService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(pessoaService, 'comparePessoa');
+        comp.comparePessoa(entity, entity2);
+        expect(pessoaService.comparePessoa).toHaveBeenCalledWith(entity, entity2);
+      });
     });
   });
 });

@@ -42,6 +42,18 @@
         <dd>
           <span>{{ chamado.descricao }}</span>
         </dd>
+        <dt><span>Cliente</span></dt>
+        <dd>
+          <div *ngIf="chamado.cliente">
+            <a [routerLink]="['/pessoa', chamado.cliente.id, 'view']">{{ chamado.cliente.nome }}</a>
+          </div>
+        </dd>
+        <dt><span>Tecnico</span></dt>
+        <dd>
+          <div *ngIf="chamado.tecnico">
+            <a [routerLink]="['/pessoa', chamado.tecnico.id, 'view']">{{ chamado.tecnico.nome }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

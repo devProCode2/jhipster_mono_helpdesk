@@ -3,28 +3,38 @@ package br.com.davefernandes.jh.helpdesk.web.rest;
 import static br.com.davefernandes.jh.helpdesk.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import br.com.davefernandes.jh.helpdesk.IntegrationTest;
 import br.com.davefernandes.jh.helpdesk.domain.Chamado;
+import br.com.davefernandes.jh.helpdesk.domain.Pessoa;
 import br.com.davefernandes.jh.helpdesk.domain.enumeration.Prioridade;
 import br.com.davefernandes.jh.helpdesk.domain.enumeration.Status;
 import br.com.davefernandes.jh.helpdesk.repository.ChamadoRepository;
+import br.com.davefernandes.jh.helpdesk.service.ChamadoService;
 import br.com.davefernandes.jh.helpdesk.service.criteria.ChamadoCriteria;
 import br.com.davefernandes.jh.helpdesk.service.dto.ChamadoDTO;
 import br.com.davefernandes.jh.helpdesk.service.mapper.ChamadoMapper;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ChamadoResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ChamadoResourceIT {
@@ -69,8 +80,14 @@ class ChamadoResourceIT {
     @Autowired
     private ChamadoRepository chamadoRepository;
 
+    @Mock
+    private ChamadoRepository chamadoRepositoryMock;
+
     @Autowired
     private ChamadoMapper chamadoMapper;
+
+    @Mock
+    private ChamadoService chamadoServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -95,6 +112,18 @@ class ChamadoResourceIT {
             .dataFechamento(DEFAULT_DATA_FECHAMENTO)
             .valorOrcamento(DEFAULT_VALOR_ORCAMENTO)
             .descricao(DEFAULT_DESCRICAO);
+        // Add required entity
+        Pessoa pessoa;
+        if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
+            pessoa = PessoaResourceIT.createEntity(em);
+            em.persist(pessoa);
+            em.flush();
+        } else {
+            pessoa = TestUtil.findAll(em, Pessoa.class).get(0);
+        }
+        chamado.setCliente(pessoa);
+        // Add required entity
+        chamado.setTecnico(pessoa);
         return chamado;
     }
 
@@ -113,6 +142,18 @@ class ChamadoResourceIT {
             .dataFechamento(UPDATED_DATA_FECHAMENTO)
             .valorOrcamento(UPDATED_VALOR_ORCAMENTO)
             .descricao(UPDATED_DESCRICAO);
+        // Add required entity
+        Pessoa pessoa;
+        if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
+            pessoa = PessoaResourceIT.createUpdatedEntity(em);
+            em.persist(pessoa);
+            em.flush();
+        } else {
+            pessoa = TestUtil.findAll(em, Pessoa.class).get(0);
+        }
+        chamado.setCliente(pessoa);
+        // Add required entity
+        chamado.setTecnico(pessoa);
         return chamado;
     }
 
@@ -272,6 +313,23 @@ class ChamadoResourceIT {
             .andExpect(jsonPath("$.[*].dataFechamento").value(hasItem(DEFAULT_DATA_FECHAMENTO.toString())))
             .andExpect(jsonPath("$.[*].valorOrcamento").value(hasItem(sameNumber(DEFAULT_VALOR_ORCAMENTO))))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllChamadosWithEagerRelationshipsIsEnabled() throws Exception {
+        when(chamadoServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restChamadoMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(chamadoServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllChamadosWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(chamadoServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restChamadoMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(chamadoRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -688,6 +746,52 @@ class ChamadoResourceIT {
 
         // Get all the chamadoList where descricao does not contain UPDATED_DESCRICAO
         defaultChamadoShouldBeFound("descricao.doesNotContain=" + UPDATED_DESCRICAO);
+    }
+
+    @Test
+    @Transactional
+    void getAllChamadosByClienteIsEqualToSomething() throws Exception {
+        Pessoa cliente;
+        if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
+            chamadoRepository.saveAndFlush(chamado);
+            cliente = PessoaResourceIT.createEntity(em);
+        } else {
+            cliente = TestUtil.findAll(em, Pessoa.class).get(0);
+        }
+        em.persist(cliente);
+        em.flush();
+        chamado.setCliente(cliente);
+        chamadoRepository.saveAndFlush(chamado);
+        Long clienteId = cliente.getId();
+
+        // Get all the chamadoList where cliente equals to clienteId
+        defaultChamadoShouldBeFound("clienteId.equals=" + clienteId);
+
+        // Get all the chamadoList where cliente equals to (clienteId + 1)
+        defaultChamadoShouldNotBeFound("clienteId.equals=" + (clienteId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllChamadosByTecnicoIsEqualToSomething() throws Exception {
+        Pessoa tecnico;
+        if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
+            chamadoRepository.saveAndFlush(chamado);
+            tecnico = PessoaResourceIT.createEntity(em);
+        } else {
+            tecnico = TestUtil.findAll(em, Pessoa.class).get(0);
+        }
+        em.persist(tecnico);
+        em.flush();
+        chamado.setTecnico(tecnico);
+        chamadoRepository.saveAndFlush(chamado);
+        Long tecnicoId = tecnico.getId();
+
+        // Get all the chamadoList where tecnico equals to tecnicoId
+        defaultChamadoShouldBeFound("tecnicoId.equals=" + tecnicoId);
+
+        // Get all the chamadoList where tecnico equals to (tecnicoId + 1)
+        defaultChamadoShouldNotBeFound("tecnicoId.equals=" + (tecnicoId + 1));
     }
 
     /**

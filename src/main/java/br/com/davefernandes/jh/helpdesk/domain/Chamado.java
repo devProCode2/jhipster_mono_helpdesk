@@ -55,6 +55,14 @@ public class Chamado implements Serializable {
     @Column(name = "descricao", length = 100)
     private String descricao;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    private Pessoa cliente;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private Pessoa tecnico;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -159,6 +167,32 @@ public class Chamado implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Pessoa getCliente() {
+        return this.cliente;
+    }
+
+    public void setCliente(Pessoa pessoa) {
+        this.cliente = pessoa;
+    }
+
+    public Chamado cliente(Pessoa pessoa) {
+        this.setCliente(pessoa);
+        return this;
+    }
+
+    public Pessoa getTecnico() {
+        return this.tecnico;
+    }
+
+    public void setTecnico(Pessoa pessoa) {
+        this.tecnico = pessoa;
+    }
+
+    public Chamado tecnico(Pessoa pessoa) {
+        this.setTecnico(pessoa);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

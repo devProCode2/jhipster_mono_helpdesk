@@ -35,6 +35,12 @@
             <column name="descricao" type="varchar(100)">
                 <constraints nullable="true" />
             </column>
+            <column name="cliente_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="tecnico_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="chamado" columnName="data_abertura" columnDataType="${datetimeType}"/>
@@ -65,6 +71,8 @@
             <column name="data_fechamento" type="date"/>
             <column name="valor_orcamento" type="numeric"/>
             <column name="descricao" type="string"/>
+            <column name="cliente_id" type="numeric"/>
+            <column name="tecnico_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

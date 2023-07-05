@@ -38,6 +38,10 @@ public class ChamadoDTO implements Serializable {
     @Size(min = 4, max = 100)
     private String descricao;
 
+    private PessoaDTO cliente;
+
+    private PessoaDTO tecnico;
+
     public Long getId() {
         return id;
     }
@@ -102,6 +106,22 @@ public class ChamadoDTO implements Serializable {
         this.descricao = descricao;
     }
 
+    public PessoaDTO getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(PessoaDTO cliente) {
+        this.cliente = cliente;
+    }
+
+    public PessoaDTO getTecnico() {
+        return tecnico;
+    }
+
+    public void setTecnico(PessoaDTO tecnico) {
+        this.tecnico = tecnico;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -135,6 +155,8 @@ public class ChamadoDTO implements Serializable {
             ", dataFechamento='" + getDataFechamento() + "'" +
             ", valorOrcamento=" + getValorOrcamento() +
             ", descricao='" + getDescricao() + "'" +
+            ", cliente=" + getCliente() +
+            ", tecnico=" + getTecnico() +
             "}";
     }
 }

@@ -82,6 +82,18 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="cliente.nome">
+            <div class="d-flex">
+              <span>Cliente</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="tecnico.nome">
+            <div class="d-flex">
+              <span>Tecnico</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -97,6 +109,16 @@
           <td>{{ chamado.dataFechamento | formatMediumDatetime }}</td>
           <td>{{ chamado.valorOrcamento }}</td>
           <td>{{ chamado.descricao }}</td>
+          <td>
+            <div *ngIf="chamado.cliente">
+              <a [routerLink]="['/pessoa', chamado.cliente.id, 'view']">{{ chamado.cliente.nome }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="chamado.tecnico">
+              <a [routerLink]="['/pessoa', chamado.tecnico.id, 'view']">{{ chamado.tecnico.nome }}</a>
+            </div>
+          </td>
           <td class="text-end">
             <div class="btn-group">
               <button

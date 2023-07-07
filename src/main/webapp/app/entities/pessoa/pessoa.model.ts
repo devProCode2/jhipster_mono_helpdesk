@@ -8,6 +8,7 @@ export interface IPessoa {
   email?: string | null;
   senha?: string | null;
   dataCadastro?: dayjs.Dayjs | null;
+  celular?: string | null;
   tipoPessoa?: TipoPessoa | null;
 }
 

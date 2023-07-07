@@ -70,6 +70,12 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="celular">
+            <div class="d-flex">
+              <span>Celular</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col" jhiSortBy="tipoPessoa">
             <div class="d-flex">
               <span>Tipo Pessoa</span>
@@ -89,6 +95,7 @@
           <td>{{ pessoa.email }}</td>
           <td>{{ pessoa.senha }}</td>
           <td>{{ pessoa.dataCadastro | formatMediumDatetime }}</td>
+          <td>{{ pessoa.celular }}</td>
           <td>{{ pessoa.tipoPessoa }}</td>
           <td class="text-end">
             <div class="btn-group">

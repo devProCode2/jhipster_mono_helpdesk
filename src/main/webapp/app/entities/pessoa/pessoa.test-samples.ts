@@ -11,35 +11,39 @@ export const sampleWithRequiredData: IPessoa = {
   email: 'Lara.Franco@live.com',
   senha: 'Algodão',
   dataCadastro: dayjs('2023-07-04T22:59'),
+  celular: 'AutomotivoX',
   tipoPessoa: TipoPessoa['TECNICO'],
 };
 
 export const sampleWithPartialData: IPessoa = {
-  id: 2046,
-  nome: 'intuitive directiona',
-  cpf: 'Avenida Con',
-  email: 'DaviLucca.Silva52@yahoo.com',
-  senha: 'Account',
-  dataCadastro: dayjs('2023-07-05T01:51'),
-  tipoPessoa: TipoPessoa['CLIENTE'],
+  id: 70057,
+  nome: 'incremental',
+  cpf: 'mobileXXXXX',
+  email: 'Vitor44@gmail.com',
+  senha: 'XSSX',
+  dataCadastro: dayjs('2023-07-05T15:26'),
+  celular: 'XMLXXXXXXXX',
+  tipoPessoa: TipoPessoa['TECNICO'],
 };
 
 export const sampleWithFullData: IPessoa = {
-  id: 39846,
-  nome: 'override',
-  cpf: 'AGPXXXXXXXX',
-  email: 'AnaClara.Saraiva97@gmail.com',
-  senha: 'bypass input deposit',
-  dataCadastro: dayjs('2023-07-05T04:14'),
+  id: 60480,
+  nome: 'Consultant',
+  cpf: 'Sapatos mar',
+  email: 'Esther72@yahoo.com',
+  senha: 'vermelho bypass input',
+  dataCadastro: dayjs('2023-07-05T04:42'),
+  celular: 'moratoriumX',
   tipoPessoa: TipoPessoa['TECNICO'],
 };
 
 export const sampleWithNewData: NewPessoa = {
-  nome: 'Sapatos platforms',
-  cpf: 'Re-engineer',
-  email: 'Gabriel_Nogueira92@bol.com.br',
-  senha: 'Rodovia time-frame B2B',
-  dataCadastro: dayjs('2023-07-05T16:57'),
+  nome: 'Configuration',
+  cpf: 'platforms M',
+  email: 'Raul_Carvalho@bol.com.br',
+  senha: 'neural',
+  dataCadastro: dayjs('2023-07-04T22:10'),
+  celular: 'Rodovia tim',
   tipoPessoa: TipoPessoa['TECNICO'],
   id: null,
 };

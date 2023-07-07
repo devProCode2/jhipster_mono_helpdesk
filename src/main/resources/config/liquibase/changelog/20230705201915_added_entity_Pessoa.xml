@@ -29,6 +29,9 @@
             <column name="data_cadastro" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
+            <column name="celular" type="varchar(11)">
+                <constraints nullable="false" />
+            </column>
             <column name="tipo_pessoa" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
@@ -59,6 +62,7 @@
             <column name="email" type="string"/>
             <column name="senha" type="string"/>
             <column name="data_cadastro" type="date"/>
+            <column name="celular" type="string"/>
             <column name="tipo_pessoa" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

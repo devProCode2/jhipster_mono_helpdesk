@@ -25,6 +25,7 @@ describe('Pessoa Form Service', () => {
             email: expect.any(Object),
             senha: expect.any(Object),
             dataCadastro: expect.any(Object),
+            celular: expect.any(Object),
             tipoPessoa: expect.any(Object),
           })
         );
@@ -41,6 +42,7 @@ describe('Pessoa Form Service', () => {
             email: expect.any(Object),
             senha: expect.any(Object),
             dataCadastro: expect.any(Object),
+            celular: expect.any(Object),
             tipoPessoa: expect.any(Object),
           })
         );

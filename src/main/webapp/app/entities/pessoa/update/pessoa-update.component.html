@@ -91,10 +91,24 @@
         </div>
 
         <div class="row mb-3">
+          <label class="form-label" for="field_celular">Celular</label>
+          <input type="text" class="form-control" name="celular" id="field_celular" data-cy="celular" formControlName="celular" />
+          <div *ngIf="editForm.get('celular')!.invalid && (editForm.get('celular')!.dirty || editForm.get('celular')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('celular')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('celular')?.errors?.minlength">
+              Este campo deve ter pelo menos 11 caracteres.
+            </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('celular')?.errors?.maxlength">
+              Este campo não pode ter mais de 11 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
           <label class="form-label" for="field_tipoPessoa">Tipo Pessoa</label>
           <select class="form-control" name="tipoPessoa" formControlName="tipoPessoa" id="field_tipoPessoa" data-cy="tipoPessoa">
             <option [ngValue]="null"></option>
-            <option *ngFor="let tipoPessoa of tipoPessoaValues" [value]="tipoPessoa">tipoPessoa</option>
+            <option *ngFor="let tipoPessoa of tipoPessoaValues" [value]="tipoPessoa">{{ tipoPessoa }}</option>
           </select>
           <div *ngIf="editForm.get('tipoPessoa')!.invalid && (editForm.get('tipoPessoa')!.dirty || editForm.get('tipoPessoa')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('tipoPessoa')?.errors?.required"> O campo é obrigatório. </small>

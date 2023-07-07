@@ -105,6 +105,9 @@ public class PessoaQueryService extends QueryService<Pessoa> {
             if (criteria.getDataCadastro() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDataCadastro(), Pessoa_.dataCadastro));
             }
+            if (criteria.getCelular() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCelular(), Pessoa_.celular));
+            }
             if (criteria.getTipoPessoa() != null) {
                 specification = specification.and(buildSpecification(criteria.getTipoPessoa(), Pessoa_.tipoPessoa));
             }

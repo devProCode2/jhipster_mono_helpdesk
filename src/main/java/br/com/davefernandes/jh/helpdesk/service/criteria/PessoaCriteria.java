@@ -51,6 +51,8 @@ public class PessoaCriteria implements Serializable, Criteria {
 
     private InstantFilter dataCadastro;
 
+    private StringFilter celular;
+
     private TipoPessoaFilter tipoPessoa;
 
     private Boolean distinct;
@@ -64,6 +66,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.email = other.email == null ? null : other.email.copy();
         this.senha = other.senha == null ? null : other.senha.copy();
         this.dataCadastro = other.dataCadastro == null ? null : other.dataCadastro.copy();
+        this.celular = other.celular == null ? null : other.celular.copy();
         this.tipoPessoa = other.tipoPessoa == null ? null : other.tipoPessoa.copy();
         this.distinct = other.distinct;
     }
@@ -163,6 +166,21 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.dataCadastro = dataCadastro;
     }
 
+    public StringFilter getCelular() {
+        return celular;
+    }
+
+    public StringFilter celular() {
+        if (celular == null) {
+            celular = new StringFilter();
+        }
+        return celular;
+    }
+
+    public void setCelular(StringFilter celular) {
+        this.celular = celular;
+    }
+
     public TipoPessoaFilter getTipoPessoa() {
         return tipoPessoa;
     }
@@ -202,6 +220,7 @@ public class PessoaCriteria implements Serializable, Criteria {
             Objects.equals(email, that.email) &&
             Objects.equals(senha, that.senha) &&
             Objects.equals(dataCadastro, that.dataCadastro) &&
+            Objects.equals(celular, that.celular) &&
             Objects.equals(tipoPessoa, that.tipoPessoa) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -209,7 +228,7 @@ public class PessoaCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, cpf, email, senha, dataCadastro, tipoPessoa, distinct);
+        return Objects.hash(id, nome, cpf, email, senha, dataCadastro, celular, tipoPessoa, distinct);
     }
 
     // prettier-ignore
@@ -222,6 +241,7 @@ public class PessoaCriteria implements Serializable, Criteria {
             (email != null ? "email=" + email + ", " : "") +
             (senha != null ? "senha=" + senha + ", " : "") +
             (dataCadastro != null ? "dataCadastro=" + dataCadastro + ", " : "") +
+            (celular != null ? "celular=" + celular + ", " : "") +
             (tipoPessoa != null ? "tipoPessoa=" + tipoPessoa + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

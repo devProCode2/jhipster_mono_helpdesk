@@ -47,6 +47,11 @@ public class Pessoa implements Serializable {
     private Instant dataCadastro;
 
     @NotNull
+    @Size(min = 11, max = 11)
+    @Column(name = "celular", length = 11, nullable = false)
+    private String celular;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_pessoa", nullable = false)
     private TipoPessoa tipoPessoa;
@@ -131,6 +136,19 @@ public class Pessoa implements Serializable {
         this.dataCadastro = dataCadastro;
     }
 
+    public String getCelular() {
+        return this.celular;
+    }
+
+    public Pessoa celular(String celular) {
+        this.setCelular(celular);
+        return this;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
     public TipoPessoa getTipoPessoa() {
         return this.tipoPessoa;
     }
@@ -173,6 +191,7 @@ public class Pessoa implements Serializable {
             ", email='" + getEmail() + "'" +
             ", senha='" + getSenha() + "'" +
             ", dataCadastro='" + getDataCadastro() + "'" +
+            ", celular='" + getCelular() + "'" +
             ", tipoPessoa='" + getTipoPessoa() + "'" +
             "}";
     }

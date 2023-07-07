@@ -36,6 +36,7 @@ type PessoaFormGroupContent = {
   email: FormControl<PessoaFormRawValue['email']>;
   senha: FormControl<PessoaFormRawValue['senha']>;
   dataCadastro: FormControl<PessoaFormRawValue['dataCadastro']>;
+  celular: FormControl<PessoaFormRawValue['celular']>;
   tipoPessoa: FormControl<PessoaFormRawValue['tipoPessoa']>;
 };
 
@@ -70,6 +71,9 @@ export class PessoaFormService {
       }),
       dataCadastro: new FormControl(pessoaRawValue.dataCadastro, {
         validators: [Validators.required],
+      }),
+      celular: new FormControl(pessoaRawValue.celular, {
+        validators: [Validators.required, Validators.minLength(11), Validators.maxLength(11)],
       }),
       tipoPessoa: new FormControl(pessoaRawValue.tipoPessoa, {
         validators: [Validators.required],

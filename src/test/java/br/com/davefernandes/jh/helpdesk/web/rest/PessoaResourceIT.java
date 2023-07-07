@@ -50,6 +50,9 @@ class PessoaResourceIT {
     private static final Instant DEFAULT_DATA_CADASTRO = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATA_CADASTRO = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_CELULAR = "AAAAAAAAAAA";
+    private static final String UPDATED_CELULAR = "BBBBBBBBBBB";
+
     private static final TipoPessoa DEFAULT_TIPO_PESSOA = TipoPessoa.TECNICO;
     private static final TipoPessoa UPDATED_TIPO_PESSOA = TipoPessoa.CLIENTE;
 
@@ -86,6 +89,7 @@ class PessoaResourceIT {
             .email(DEFAULT_EMAIL)
             .senha(DEFAULT_SENHA)
             .dataCadastro(DEFAULT_DATA_CADASTRO)
+            .celular(DEFAULT_CELULAR)
             .tipoPessoa(DEFAULT_TIPO_PESSOA);
         return pessoa;
     }
@@ -103,6 +107,7 @@ class PessoaResourceIT {
             .email(UPDATED_EMAIL)
             .senha(UPDATED_SENHA)
             .dataCadastro(UPDATED_DATA_CADASTRO)
+            .celular(UPDATED_CELULAR)
             .tipoPessoa(UPDATED_TIPO_PESSOA);
         return pessoa;
     }
@@ -131,6 +136,7 @@ class PessoaResourceIT {
         assertThat(testPessoa.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testPessoa.getSenha()).isEqualTo(DEFAULT_SENHA);
         assertThat(testPessoa.getDataCadastro()).isEqualTo(DEFAULT_DATA_CADASTRO);
+        assertThat(testPessoa.getCelular()).isEqualTo(DEFAULT_CELULAR);
         assertThat(testPessoa.getTipoPessoa()).isEqualTo(DEFAULT_TIPO_PESSOA);
     }
 
@@ -245,6 +251,24 @@ class PessoaResourceIT {
 
     @Test
     @Transactional
+    void checkCelularIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pessoaRepository.findAll().size();
+        // set the field null
+        pessoa.setCelular(null);
+
+        // Create the Pessoa, which fails.
+        PessoaDTO pessoaDTO = pessoaMapper.toDto(pessoa);
+
+        restPessoaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoaDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void checkTipoPessoaIsRequired() throws Exception {
         int databaseSizeBeforeTest = pessoaRepository.findAll().size();
         // set the field null
@@ -278,6 +302,7 @@ class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
             .andExpect(jsonPath("$.[*].senha").value(hasItem(DEFAULT_SENHA)))
             .andExpect(jsonPath("$.[*].dataCadastro").value(hasItem(DEFAULT_DATA_CADASTRO.toString())))
+            .andExpect(jsonPath("$.[*].celular").value(hasItem(DEFAULT_CELULAR)))
             .andExpect(jsonPath("$.[*].tipoPessoa").value(hasItem(DEFAULT_TIPO_PESSOA.toString())));
     }
 
@@ -298,6 +323,7 @@ class PessoaResourceIT {
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
             .andExpect(jsonPath("$.senha").value(DEFAULT_SENHA))
             .andExpect(jsonPath("$.dataCadastro").value(DEFAULT_DATA_CADASTRO.toString()))
+            .andExpect(jsonPath("$.celular").value(DEFAULT_CELULAR))
             .andExpect(jsonPath("$.tipoPessoa").value(DEFAULT_TIPO_PESSOA.toString()));
     }
 
@@ -620,6 +646,71 @@ class PessoaResourceIT {
 
     @Test
     @Transactional
+    void getAllPessoasByCelularIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where celular equals to DEFAULT_CELULAR
+        defaultPessoaShouldBeFound("celular.equals=" + DEFAULT_CELULAR);
+
+        // Get all the pessoaList where celular equals to UPDATED_CELULAR
+        defaultPessoaShouldNotBeFound("celular.equals=" + UPDATED_CELULAR);
+    }
+
+    @Test
+    @Transactional
+    void getAllPessoasByCelularIsInShouldWork() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where celular in DEFAULT_CELULAR or UPDATED_CELULAR
+        defaultPessoaShouldBeFound("celular.in=" + DEFAULT_CELULAR + "," + UPDATED_CELULAR);
+
+        // Get all the pessoaList where celular equals to UPDATED_CELULAR
+        defaultPessoaShouldNotBeFound("celular.in=" + UPDATED_CELULAR);
+    }
+
+    @Test
+    @Transactional
+    void getAllPessoasByCelularIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where celular is not null
+        defaultPessoaShouldBeFound("celular.specified=true");
+
+        // Get all the pessoaList where celular is null
+        defaultPessoaShouldNotBeFound("celular.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPessoasByCelularContainsSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where celular contains DEFAULT_CELULAR
+        defaultPessoaShouldBeFound("celular.contains=" + DEFAULT_CELULAR);
+
+        // Get all the pessoaList where celular contains UPDATED_CELULAR
+        defaultPessoaShouldNotBeFound("celular.contains=" + UPDATED_CELULAR);
+    }
+
+    @Test
+    @Transactional
+    void getAllPessoasByCelularNotContainsSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where celular does not contain DEFAULT_CELULAR
+        defaultPessoaShouldNotBeFound("celular.doesNotContain=" + DEFAULT_CELULAR);
+
+        // Get all the pessoaList where celular does not contain UPDATED_CELULAR
+        defaultPessoaShouldBeFound("celular.doesNotContain=" + UPDATED_CELULAR);
+    }
+
+    @Test
+    @Transactional
     void getAllPessoasByTipoPessoaIsEqualToSomething() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
@@ -671,6 +762,7 @@ class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
             .andExpect(jsonPath("$.[*].senha").value(hasItem(DEFAULT_SENHA)))
             .andExpect(jsonPath("$.[*].dataCadastro").value(hasItem(DEFAULT_DATA_CADASTRO.toString())))
+            .andExpect(jsonPath("$.[*].celular").value(hasItem(DEFAULT_CELULAR)))
             .andExpect(jsonPath("$.[*].tipoPessoa").value(hasItem(DEFAULT_TIPO_PESSOA.toString())));
 
         // Check, that the count call also returns 1
@@ -725,6 +817,7 @@ class PessoaResourceIT {
             .email(UPDATED_EMAIL)
             .senha(UPDATED_SENHA)
             .dataCadastro(UPDATED_DATA_CADASTRO)
+            .celular(UPDATED_CELULAR)
             .tipoPessoa(UPDATED_TIPO_PESSOA);
         PessoaDTO pessoaDTO = pessoaMapper.toDto(updatedPessoa);
 
@@ -745,6 +838,7 @@ class PessoaResourceIT {
         assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testPessoa.getSenha()).isEqualTo(UPDATED_SENHA);
         assertThat(testPessoa.getDataCadastro()).isEqualTo(UPDATED_DATA_CADASTRO);
+        assertThat(testPessoa.getCelular()).isEqualTo(UPDATED_CELULAR);
         assertThat(testPessoa.getTipoPessoa()).isEqualTo(UPDATED_TIPO_PESSOA);
     }
 
@@ -830,6 +924,7 @@ class PessoaResourceIT {
             .cpf(UPDATED_CPF)
             .senha(UPDATED_SENHA)
             .dataCadastro(UPDATED_DATA_CADASTRO)
+            .celular(UPDATED_CELULAR)
             .tipoPessoa(UPDATED_TIPO_PESSOA);
 
         restPessoaMockMvc
@@ -849,6 +944,7 @@ class PessoaResourceIT {
         assertThat(testPessoa.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testPessoa.getSenha()).isEqualTo(UPDATED_SENHA);
         assertThat(testPessoa.getDataCadastro()).isEqualTo(UPDATED_DATA_CADASTRO);
+        assertThat(testPessoa.getCelular()).isEqualTo(UPDATED_CELULAR);
         assertThat(testPessoa.getTipoPessoa()).isEqualTo(UPDATED_TIPO_PESSOA);
     }
 
@@ -870,6 +966,7 @@ class PessoaResourceIT {
             .email(UPDATED_EMAIL)
             .senha(UPDATED_SENHA)
             .dataCadastro(UPDATED_DATA_CADASTRO)
+            .celular(UPDATED_CELULAR)
             .tipoPessoa(UPDATED_TIPO_PESSOA);
 
         restPessoaMockMvc
@@ -889,6 +986,7 @@ class PessoaResourceIT {
         assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testPessoa.getSenha()).isEqualTo(UPDATED_SENHA);
         assertThat(testPessoa.getDataCadastro()).isEqualTo(UPDATED_DATA_CADASTRO);
+        assertThat(testPessoa.getCelular()).isEqualTo(UPDATED_CELULAR);
         assertThat(testPessoa.getTipoPessoa()).isEqualTo(UPDATED_TIPO_PESSOA);
     }
 

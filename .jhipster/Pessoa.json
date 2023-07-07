@@ -36,6 +36,13 @@
       "fieldValidateRules": ["required"]
     },
     {
+      "fieldName": "celular",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "11",
+      "fieldValidateRulesMinlength": "11"
+    },
+    {
       "fieldName": "tipoPessoa",
       "fieldType": "TipoPessoa",
       "fieldValidateRules": ["required"],

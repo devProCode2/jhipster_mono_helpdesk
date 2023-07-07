@@ -29,7 +29,7 @@
           <label class="form-label" for="field_status">Status</label>
           <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
             <option [ngValue]="null"></option>
-            <option *ngFor="let status of statusValues" [value]="status">status</option>
+            <option *ngFor="let status of statusValues" [value]="status">{{ status }}</option>
           </select>
           <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
@@ -40,7 +40,7 @@
           <label class="form-label" for="field_prioridade">Prioridade</label>
           <select class="form-control" name="prioridade" formControlName="prioridade" id="field_prioridade" data-cy="prioridade">
             <option [ngValue]="null"></option>
-            <option *ngFor="let prioridade of prioridadeValues" [value]="prioridade">prioridade</option>
+            <option *ngFor="let prioridade of prioridadeValues" [value]="prioridade">{{ prioridade }}</option>
           </select>
           <div *ngIf="editForm.get('prioridade')!.invalid && (editForm.get('prioridade')!.dirty || editForm.get('prioridade')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('prioridade')?.errors?.required"> O campo é obrigatório. </small>

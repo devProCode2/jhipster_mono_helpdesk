@@ -34,6 +34,10 @@ public class PessoaDTO implements Serializable {
     private Instant dataCadastro;
 
     @NotNull
+    @Size(min = 11, max = 11)
+    private String celular;
+
+    @NotNull
     private TipoPessoa tipoPessoa;
 
     public Long getId() {
@@ -84,6 +88,14 @@ public class PessoaDTO implements Serializable {
         this.dataCadastro = dataCadastro;
     }
 
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
     public TipoPessoa getTipoPessoa() {
         return tipoPessoa;
     }
@@ -123,6 +135,7 @@ public class PessoaDTO implements Serializable {
             ", email='" + getEmail() + "'" +
             ", senha='" + getSenha() + "'" +
             ", dataCadastro='" + getDataCadastro() + "'" +
+            ", celular='" + getCelular() + "'" +
             ", tipoPessoa='" + getTipoPessoa() + "'" +
             "}";
     }
